@@ -21,6 +21,7 @@ dice5 = random.randint(1,6)
 dice_list = [dice1,dice2,dice3,dice4,dice5]
 
 #주사위 표시 위치 설정
+dice_x_pos_list = [screen_width/11 * i for i in (1,3,5,7,9)]
 dice_y_pos = (screen_height/4)
 
 #주사위 이미지 불러오기, 크기 조정
@@ -45,90 +46,45 @@ d6_img = pygame.transform.scale(d6_img, (75,75))
 #화면 제목
 pygame.display.set_caption("야추")
 
+#주사위 이미지 출력
+def show_dice(dice, img1, img2, img3, img4, img5, img6, x_pos, y_pos):
+    if dice == 1:
+        screen.blit(img1,(x_pos,y_pos))
+    elif dice ==2:
+        screen.blit(img2,(x_pos,y_pos))
+    elif dice ==3:
+        screen.blit(img3,(x_pos,y_pos))
+    elif dice ==4:
+        screen.blit(img4,(x_pos,y_pos))
+    elif dice ==5:
+        screen.blit(img5,(x_pos,y_pos))
+    elif dice ==6:
+        screen.blit(img6,(x_pos,y_pos))
+
 #이벤트 루프
 running = True
 while running:
     for event in pygame.event.get():
-        if event.type == pygame.QUIT:
+        pressed = pygame.key.get_pressed()
+        if event.type == pygame.QUIT:       #종료
              running = False
-        elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_SPACE:
-                dice_list[0] = random.randint(1,6)
-                dice_list[1] = random.randint(1,6)
-                dice_list[2] = random.randint(1,6)
-                dice_list[3] = random.randint(1,6)
-                dice_list[4] = random.randint(1,6)
+        if pressed[pygame.K_SPACE]:
+            for i in range(0,5):
+                dice_list[i] = random.randint(1,6)
+
              
     #배경 설정
     screen.fill((255,255,255))
-    
+
+    #주사위 값 정렬
     dice_list.sort()
 
     #주사위 값에 따른 주사위 이미지 출력
-    if dice_list[0] == 1:
-        screen.blit(d1_img,(100,dice_y_pos))
-    elif dice_list[0] ==2:
-        screen.blit(d2_img,(100,dice_y_pos))
-    elif dice_list[0] ==3:
-        screen.blit(d3_img,(100,dice_y_pos))
-    elif dice_list[0] ==4:
-        screen.blit(d4_img,(100,dice_y_pos))
-    elif dice_list[0] ==5:
-        screen.blit(d5_img,(100,dice_y_pos))
-    elif dice_list[0] ==6:
-        screen.blit(d6_img,(100,dice_y_pos))
-    
-    if dice_list[1] == 1:
-        screen.blit(d1_img,(200,dice_y_pos))
-    elif dice_list[1] ==2:
-        screen.blit(d2_img,(200,dice_y_pos))
-    elif dice_list[1] ==3:
-        screen.blit(d3_img,(200,dice_y_pos))
-    elif dice_list[1] ==4:
-        screen.blit(d4_img,(200,dice_y_pos))
-    elif dice_list[1] ==5:
-        screen.blit(d5_img,(200,dice_y_pos))
-    elif dice_list[1] ==6:
-        screen.blit(d6_img,(200,dice_y_pos))
-
-    if dice_list[2] == 1:
-        screen.blit(d1_img,(300,dice_y_pos))
-    elif dice_list[2] ==2:
-        screen.blit(d2_img,(300,dice_y_pos))
-    elif dice_list[2] ==3:
-        screen.blit(d3_img,(300,dice_y_pos))
-    elif dice_list[2] ==4:
-        screen.blit(d4_img,(300,dice_y_pos))
-    elif dice_list[2] ==5:
-        screen.blit(d5_img,(300,dice_y_pos))
-    elif dice_list[2] ==6:
-        screen.blit(d6_img,(300,dice_y_pos))
-
-    if dice_list[3] == 1:
-        screen.blit(d1_img,(400,dice_y_pos))
-    elif dice_list[3] ==2:
-        screen.blit(d2_img,(400,dice_y_pos))
-    elif dice_list[3] ==3:
-        screen.blit(d3_img,(400,dice_y_pos))
-    elif dice_list[3] ==4:
-        screen.blit(d4_img,(400,dice_y_pos))
-    elif dice_list[3] ==5:
-        screen.blit(d5_img,(400,dice_y_pos))
-    elif dice_list[3] ==6:
-        screen.blit(d6_img,(400,dice_y_pos))
-
-    if dice_list[4] == 1:
-        screen.blit(d1_img,(500,dice_y_pos))
-    elif dice_list[4] ==2:
-        screen.blit(d2_img,(500,dice_y_pos))
-    elif dice_list[4] ==3:
-        screen.blit(d3_img,(500,dice_y_pos))
-    elif dice_list[4] ==4:
-        screen.blit(d4_img,(500,dice_y_pos))
-    elif dice_list[4] ==5:
-        screen.blit(d5_img,(500,dice_y_pos))
-    elif dice_list[4] ==6:
-        screen.blit(d6_img,(500,dice_y_pos))
+    show_dice(dice_list[0], d1_img, d2_img, d3_img, d4_img, d5_img, d6_img, dice_x_pos_list[0], dice_y_pos)   
+    show_dice(dice_list[1], d1_img, d2_img, d3_img, d4_img, d5_img, d6_img, dice_x_pos_list[1], dice_y_pos)
+    show_dice(dice_list[2], d1_img, d2_img, d3_img, d4_img, d5_img, d6_img, dice_x_pos_list[2], dice_y_pos)
+    show_dice(dice_list[3], d1_img, d2_img, d3_img, d4_img, d5_img, d6_img, dice_x_pos_list[3], dice_y_pos)
+    show_dice(dice_list[4], d1_img, d2_img, d3_img, d4_img, d5_img, d6_img, dice_x_pos_list[4], dice_y_pos)
 
     #화면 그리기
     pygame.display.update()
