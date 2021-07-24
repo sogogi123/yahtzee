@@ -24,6 +24,10 @@ dice_list = [dice1,dice2,dice3,dice4,dice5]
 dice_x_pos_list = [screen_width/11 * i for i in (1,3,5,7,9)]
 dice_y_pos = (screen_height/4)
 
+bgm = pygame.mixer.Sound("yahtzee/기둥속 사내 ost.mp3")
+bgm.set_volume(0.5)
+bgm.play(-1)
+
 #주사위 이미지 불러오기, 크기 조정
 d1_img = pygame.image.load("yahtzee/dice1.png")
 d1_img = pygame.transform.scale(d1_img, (75,75))
@@ -71,7 +75,6 @@ while running:
         if pressed[pygame.K_SPACE]:
             for i in range(0,5):
                 dice_list[i] = random.randint(1,6)
-
              
     #배경 설정
     screen.fill((255,255,255))
