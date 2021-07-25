@@ -20,6 +20,7 @@ dice5 = random.randint(1,6)
 
 #주사위 변수들을 list에 넣음
 dice_list = [dice1,dice2,dice3,dice4,dice5]
+sorted_dice_list = [0,0,0,0,0]
 
 #주사위 굴리는 횟수 제한
 #dice_count = 0
@@ -33,7 +34,9 @@ dice_y_pos = (screen_height/4)
 
 # 게임 음악
 bgm = pygame.mixer.Sound("yahtzee/기둥속 사내 ost.mp3")
+#yacht_bgm = pygame.mixer.Sound("yahtzee\죠죠 5부 죠르노 죠바나 처형브금 하이라이트 1시간 반복(초반 노이즈X, only 하이라이트).mp3")
 bgm.set_volume(0.1)
+#yacht_bgm.set_volume(0.3)
 bgm.play(-1)
 
 #점수 변수
@@ -43,6 +46,12 @@ threes = 0
 fours = 0
 fives = 0
 sixes = 0
+choice = 0
+four_of_kind = 0
+full_house = 0
+small_straight = 0
+large_straight = 0
+yacht = 0
 
 #주사위 이미지 불러오기, 크기 조정
 d1_img = pygame.image.load("yahtzee/dice1.png")
@@ -110,6 +119,9 @@ def gold_frame():
 running = True
 while running:
 
+    # 정렬 된 주사위값들을 가지는 리스트
+    sorted_dice_list = sorted(dice_list)
+
     #텍스트 출력
     color_black = (0, 0, 0)
     score_font = pygame.font.SysFont("arial", 30, True, False)
@@ -119,7 +131,13 @@ while running:
     text_fours = score_font.render("Fours : " + str(fours), True, color_black)
     text_fives = score_font.render("Fives : " + str(fives), True, color_black)
     text_sixes = score_font.render("Sixes : " + str(sixes), True, color_black)
-    
+    text_choice = score_font.render("Choice : " + str(choice), True, color_black)
+    text_four_of_kind = score_font.render("4 of a Kind : " + str(four_of_kind), True, color_black)
+    text_full_house = score_font.render("Full House : " + str(full_house), True, color_black)
+    text_small_straight = score_font.render("S. Straight : " + str(small_straight), True, color_black)
+    text_large_straight = score_font.render("L. Straight : " + str(large_straight), True, color_black)
+    text_yacht = score_font.render("Yacht : " + str(yacht), True, color_black)
+
     clock.tick(60) #60 프레임 제한
 
     for event in pygame.event.get():
@@ -134,6 +152,65 @@ while running:
             current_pos = pygame.mouse.get_pos()
             for i in range(0,5):
                 fix_dice(current_pos, dice_x_pos_list, dice_y_pos, i)
+
+    aces = dice_list.count(1) * 1
+    deuces = dice_list.count(2) * 2
+    threes = dice_list.count(3) * 3
+    fours = dice_list.count(4) * 4
+    fives = dice_list.count(5) * 5
+    sixes = dice_list.count(6) * 6
+    choice = sum(dice_list)
+    
+    def cal_four_of_kind():
+        for i in range(1,7):
+            cnt = 0
+            cnt = dice_list.count(i)
+            if cnt >= 4:
+                return sum(dice_list)
+        return 0
+
+    four_of_kind = cal_four_of_kind()
+
+    def cal_full_house():
+        if sorted_dice_list[0] == sorted_dice_list[1] == sorted_dice_list[2] and sorted_dice_list[3] == sorted_dice_list[4]:
+            return sum(sorted_dice_list)
+        elif sorted_dice_list[0] == sorted_dice_list[1] and sorted_dice_list[2] == sorted_dice_list[3] == sorted_dice_list[4]:
+            return sum(sorted_dice_list)
+        return 0
+
+    full_house = cal_full_house()
+
+    def cal_small_straight():
+        if sorted_dice_list[0] == 1 and sorted_dice_list[1] == 2 and sorted_dice_list[2] == 3 and sorted_dice_list[3] == 4:
+            return 15
+        elif sorted_dice_list[1] == 1 and sorted_dice_list[2] == 2 and sorted_dice_list[3] == 3 and sorted_dice_list[4] == 4:
+            return 15
+        elif sorted_dice_list[0] == 2 and sorted_dice_list[1] == 3 and sorted_dice_list[2] == 4 and sorted_dice_list[3] == 5:
+            return 15
+        elif sorted_dice_list[1] == 2 and sorted_dice_list[2] == 3 and sorted_dice_list[3] == 4 and sorted_dice_list[4] == 5:
+            return 15
+        return 0
+    
+    small_straight = cal_small_straight()
+
+    def cal_large_straight():
+        if sorted_dice_list[0] == 1 and sorted_dice_list[1] == 2 and sorted_dice_list[2] == 3 and sorted_dice_list[3] == 4 and sorted_dice_list[4] == 5:
+            return 30
+        elif sorted_dice_list[0] == 2 and sorted_dice_list[1] == 3 and sorted_dice_list[2] == 4 and sorted_dice_list[3] == 5 and sorted_dice_list[4] == 6:
+            return 30
+        return 0
+
+    large_straight = cal_large_straight()
+
+    def cal_yacht():
+        dice_set = list(set(dice_list))
+        if len(dice_set) == 1:
+            #bgm.stop()
+            #yacht_bgm.play(30)
+            return 50
+        return 0
+
+    yacht = cal_yacht()
 
     #배경 설정
     screen.fill((255,255,255))
@@ -152,7 +229,12 @@ while running:
     screen.blit(text_fours, (50, dice_y_pos * 1.5 + 90))
     screen.blit(text_fives, (50, dice_y_pos * 1.5 + 120))
     screen.blit(text_sixes, (50, dice_y_pos * 1.5 + 150))
-    
+    screen.blit(text_choice, (50, dice_y_pos * 1.5 + 180))
+    screen.blit(text_four_of_kind, (50, dice_y_pos * 1.5 + 210))
+    screen.blit(text_full_house, (50, dice_y_pos * 1.5 + 240))
+    screen.blit(text_small_straight, (50, dice_y_pos * 1.5 + 270))
+    screen.blit(text_large_straight, (50, dice_y_pos * 1.5 + 300))
+    screen.blit(text_yacht, (50, dice_y_pos * 1.5 + 330))
 
     # 주사위 선택하면 테두리가 나타남
     gold_frame()
