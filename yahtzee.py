@@ -20,12 +20,18 @@ dice5 = random.randint(1,6)
 #주사위 변수들을 list에 넣음
 dice_list = [dice1,dice2,dice3,dice4,dice5]
 
+#주사위 굴리는 횟수 제한
+#dice_count = 0
+
+#주사위 선택 여부 변수
+dice_selected = [False, False, False, False, False]
+
 #주사위 표시 위치 설정
 dice_x_pos_list = [screen_width/11 * i for i in (1,3,5,7,9)]
 dice_y_pos = (screen_height/4)
 
 bgm = pygame.mixer.Sound("yahtzee/기둥속 사내 ost.mp3")
-bgm.set_volume(0.5)
+bgm.set_volume(0.1)
 bgm.play(-1)
 
 #주사위 이미지 불러오기, 크기 조정
@@ -72,15 +78,44 @@ while running:
         pressed = pygame.key.get_pressed()
         if event.type == pygame.QUIT:       #종료
              running = False
-        if pressed[pygame.K_SPACE]:
+        if pressed[pygame.K_SPACE]:         #스페이스바 이벤트
             for i in range(0,5):
-                dice_list[i] = random.randint(1,6)
-             
+                if dice_selected[i] == False:
+                    dice_list[i] = random.randint(1,6)
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:          #마우스 클릭시 이벤트
+            current_pos = pygame.mouse.get_pos()
+            if dice_x_pos_list[0] <= current_pos[0] <= dice_x_pos_list[0] + 75 and dice_y_pos <= current_pos[1] <= dice_y_pos +75:
+                if dice_selected[0] == False:
+                    dice_selected[0] = True
+                else:
+                    dice_selected[0] = False
+            elif dice_x_pos_list[1] <= current_pos[0] <= dice_x_pos_list[1] + 75 and dice_y_pos <= current_pos[1] <= dice_y_pos +75:
+                if dice_selected[1] == False:
+                    dice_selected[1] = True
+                else:
+                    dice_selected[1] = False
+            elif dice_x_pos_list[2] <= current_pos[0] <= dice_x_pos_list[2] + 75 and dice_y_pos <= current_pos[1] <= dice_y_pos +75:
+                if dice_selected[2] == False:
+                    dice_selected[2] = True
+                else:
+                    dice_selected[2] = False
+            elif dice_x_pos_list[3] <= current_pos[0] <= dice_x_pos_list[3] + 75 and dice_y_pos <= current_pos[1] <= dice_y_pos +75:
+                if dice_selected[3] == False:
+                    dice_selected[3] = True
+                else:
+                    dice_selected[3] = False
+            elif dice_x_pos_list[4] <= current_pos[0] <= dice_x_pos_list[4] + 75 and dice_y_pos <= current_pos[1] <= dice_y_pos +75:
+                if dice_selected[4] == False:
+                    dice_selected[4] = True
+                else:
+                    dice_selected[4] = False
+
+
     #배경 설정
     screen.fill((255,255,255))
 
     #주사위 값 정렬
-    dice_list.sort()
+    #dice_list.sort()
 
     #주사위 값에 따른 주사위 이미지 출력
     show_dice(dice_list[0], d1_img, d2_img, d3_img, d4_img, d5_img, d6_img, dice_x_pos_list[0], dice_y_pos)   
