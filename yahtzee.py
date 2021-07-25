@@ -31,9 +31,18 @@ dice_selected = [False, False, False, False, False]
 dice_x_pos_list = [screen_width/11 * i for i in (1,3,5,7,9)]
 dice_y_pos = (screen_height/4)
 
+# 게임 음악
 bgm = pygame.mixer.Sound("yahtzee/기둥속 사내 ost.mp3")
 bgm.set_volume(0.1)
 bgm.play(-1)
+
+#점수 변수
+aces = 0
+deuces = 0
+threes = 0
+fours = 0
+fives = 0
+sixes = 0
 
 #주사위 이미지 불러오기, 크기 조정
 d1_img = pygame.image.load("yahtzee/dice1.png")
@@ -58,6 +67,7 @@ d6_img = pygame.transform.scale(d6_img, (75,75))
 gold_frame_img = pygame.image.load("yahtzee/gold_frame.png")
 gold_frame_img = pygame.transform.scale(gold_frame_img,(75,75))
 
+
 #화면 제목
 pygame.display.set_caption("야추")
 
@@ -76,9 +86,39 @@ def show_dice(dice, img1, img2, img3, img4, img5, img6, x_pos, y_pos):
     elif dice ==6:
         screen.blit(img6,(x_pos,y_pos))
 
+#주사위 선택 함수
+def fix_dice(c_pos, x_pos, y_pos, i):
+    if x_pos[i] <= c_pos[0] <= x_pos[i] + 75 and y_pos <= c_pos[1] <= y_pos + 75:
+        if dice_selected[i] == False:
+            dice_selected[i] = True
+        else:
+            dice_selected[i] = False
+
+def gold_frame():
+    if dice_selected[0]:
+        screen.blit(gold_frame_img,(dice_x_pos_list[0],dice_y_pos))
+    if dice_selected[1]:
+        screen.blit(gold_frame_img,(dice_x_pos_list[1],dice_y_pos))
+    if dice_selected[2]:
+        screen.blit(gold_frame_img,(dice_x_pos_list[2],dice_y_pos))
+    if dice_selected[3]:
+        screen.blit(gold_frame_img,(dice_x_pos_list[3],dice_y_pos))
+    if dice_selected[4]:
+        screen.blit(gold_frame_img,(dice_x_pos_list[4],dice_y_pos))
+
 #이벤트 루프
 running = True
 while running:
+
+    #텍스트 출력
+    color_black = (0, 0, 0)
+    score_font = pygame.font.SysFont("arial", 30, True, False)
+    text_aces = score_font.render("Aces : " + str(aces), True, color_black)
+    text_deuces = score_font.render("Deuces : " + str(deuces), True, color_black)
+    text_threes = score_font.render("Threes : " + str(threes), True, color_black)
+    text_fours = score_font.render("Fours : " + str(fours), True, color_black)
+    text_fives = score_font.render("Fives : " + str(fives), True, color_black)
+    text_sixes = score_font.render("Sixes : " + str(sixes), True, color_black)
     
     clock.tick(60) #60 프레임 제한
 
@@ -92,32 +132,8 @@ while running:
                     dice_list[i] = random.randint(1,6)
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:          #마우스 클릭시 이벤트
             current_pos = pygame.mouse.get_pos()
-            if dice_x_pos_list[0] <= current_pos[0] <= dice_x_pos_list[0] + 75 and dice_y_pos <= current_pos[1] <= dice_y_pos +75:
-                if dice_selected[0] == False:
-                    dice_selected[0] = True
-                else:
-                    dice_selected[0] = False
-            elif dice_x_pos_list[1] <= current_pos[0] <= dice_x_pos_list[1] + 75 and dice_y_pos <= current_pos[1] <= dice_y_pos +75:
-                if dice_selected[1] == False:
-                    dice_selected[1] = True
-                else:
-                    dice_selected[1] = False
-            elif dice_x_pos_list[2] <= current_pos[0] <= dice_x_pos_list[2] + 75 and dice_y_pos <= current_pos[1] <= dice_y_pos +75:
-                if dice_selected[2] == False:
-                    dice_selected[2] = True
-                else:
-                    dice_selected[2] = False
-            elif dice_x_pos_list[3] <= current_pos[0] <= dice_x_pos_list[3] + 75 and dice_y_pos <= current_pos[1] <= dice_y_pos +75:
-                if dice_selected[3] == False:
-                    dice_selected[3] = True
-                else:
-                    dice_selected[3] = False
-            elif dice_x_pos_list[4] <= current_pos[0] <= dice_x_pos_list[4] + 75 and dice_y_pos <= current_pos[1] <= dice_y_pos +75:
-                if dice_selected[4] == False:
-                    dice_selected[4] = True
-                else:
-                    dice_selected[4] = False
-
+            for i in range(0,5):
+                fix_dice(current_pos, dice_x_pos_list, dice_y_pos, i)
 
     #배경 설정
     screen.fill((255,255,255))
@@ -126,24 +142,19 @@ while running:
     #dice_list.sort()
 
     #주사위 값에 따른 주사위 이미지 출력
-    show_dice(dice_list[0], d1_img, d2_img, d3_img, d4_img, d5_img, d6_img, dice_x_pos_list[0], dice_y_pos)   
-    show_dice(dice_list[1], d1_img, d2_img, d3_img, d4_img, d5_img, d6_img, dice_x_pos_list[1], dice_y_pos)
-    show_dice(dice_list[2], d1_img, d2_img, d3_img, d4_img, d5_img, d6_img, dice_x_pos_list[2], dice_y_pos)
-    show_dice(dice_list[3], d1_img, d2_img, d3_img, d4_img, d5_img, d6_img, dice_x_pos_list[3], dice_y_pos)
-    show_dice(dice_list[4], d1_img, d2_img, d3_img, d4_img, d5_img, d6_img, dice_x_pos_list[4], dice_y_pos)
+    for i in range(0,5):
+        show_dice(dice_list[i], d1_img, d2_img, d3_img, d4_img, d5_img, d6_img, dice_x_pos_list[i], dice_y_pos)
 
-    # 주사위 선택 정하기
-    def gold_frame():
-        if dice_selected[0]:
-            screen.blit(gold_frame_img,(dice_x_pos_list[0],dice_y_pos))
-        if dice_selected[1]:
-            screen.blit(gold_frame_img,(dice_x_pos_list[1],dice_y_pos))
-        if dice_selected[2]:
-            screen.blit(gold_frame_img,(dice_x_pos_list[2],dice_y_pos))
-        if dice_selected[3]:
-            screen.blit(gold_frame_img,(dice_x_pos_list[3],dice_y_pos))
-        if dice_selected[4]:
-            screen.blit(gold_frame_img,(dice_x_pos_list[4],dice_y_pos))
+    #화면에 텍스트 출력하기
+    screen.blit(text_aces, (50, dice_y_pos * 1.5))
+    screen.blit(text_deuces, (50, dice_y_pos * 1.5 + 30))
+    screen.blit(text_threes, (50, dice_y_pos * 1.5 + 60))
+    screen.blit(text_fours, (50, dice_y_pos * 1.5 + 90))
+    screen.blit(text_fives, (50, dice_y_pos * 1.5 + 120))
+    screen.blit(text_sixes, (50, dice_y_pos * 1.5 + 150))
+    
+
+    # 주사위 선택하면 테두리가 나타남
     gold_frame()
 
     #화면 그리기
