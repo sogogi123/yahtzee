@@ -54,6 +54,10 @@ d5_img = pygame.transform.scale(d5_img, (75,75))
 d6_img = pygame.image.load("yahtzee/dice6.png")
 d6_img = pygame.transform.scale(d6_img, (75,75))
 
+#황금 테두리 이미지
+gold_frame_img = pygame.image.load("yahtzee/gold_frame.png")
+gold_frame_img = pygame.transform.scale(gold_frame_img,(75,75))
+
 #화면 제목
 pygame.display.set_caption("야추")
 
@@ -127,6 +131,20 @@ while running:
     show_dice(dice_list[2], d1_img, d2_img, d3_img, d4_img, d5_img, d6_img, dice_x_pos_list[2], dice_y_pos)
     show_dice(dice_list[3], d1_img, d2_img, d3_img, d4_img, d5_img, d6_img, dice_x_pos_list[3], dice_y_pos)
     show_dice(dice_list[4], d1_img, d2_img, d3_img, d4_img, d5_img, d6_img, dice_x_pos_list[4], dice_y_pos)
+
+    # 주사위 선택 정하기
+    def gold_frame():
+        if dice_selected[0]:
+            screen.blit(gold_frame_img,(dice_x_pos_list[0],dice_y_pos))
+        if dice_selected[1]:
+            screen.blit(gold_frame_img,(dice_x_pos_list[1],dice_y_pos))
+        if dice_selected[2]:
+            screen.blit(gold_frame_img,(dice_x_pos_list[2],dice_y_pos))
+        if dice_selected[3]:
+            screen.blit(gold_frame_img,(dice_x_pos_list[3],dice_y_pos))
+        if dice_selected[4]:
+            screen.blit(gold_frame_img,(dice_x_pos_list[4],dice_y_pos))
+    gold_frame()
 
     #화면 그리기
     pygame.display.update()
