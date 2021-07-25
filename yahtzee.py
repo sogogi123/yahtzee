@@ -8,6 +8,7 @@ screen_width = 750
 screen_height = 750
 screen = pygame.display.set_mode((screen_width, screen_height))
 
+# 프레임 설정
 clock = pygame.time.Clock()
 
 #주사위 변수
@@ -68,6 +69,9 @@ def show_dice(dice, img1, img2, img3, img4, img5, img6, x_pos, y_pos):
 #이벤트 루프
 running = True
 while running:
+    
+    clock.tick(60) #60 프레임 제한
+
     for event in pygame.event.get():
         pressed = pygame.key.get_pressed()
         if event.type == pygame.QUIT:       #종료
